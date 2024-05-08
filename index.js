@@ -1,20 +1,67 @@
-// Given Parameters
-const vel = 10000; // velocity (km/h)
-const acc = 3; // acceleration (m/s^2)
-const time = 3600; // seconds (1 hour)
-const d = 0; // distance (km)
-const fuel = 5000; // remaining fuel (kg)
-const fbr = 0.5; // fuel burn rate (kg/s)
+const spacePar = {
+    initVelocity_kmH: 10000,
+    acceleration_ms2: 3,
+    time_sec: 3600,
+    initDistance_km: 0,
+    initFuel_kg: 5000,
+    fuelBurnRate_kgSec: 0.5,
 
-const d2 = d + vel * (time / 3600); //calcultes new distance
-const rf = fuel - fbr * time; //calculates remaining fuel
-const vel2 = calcNewVel(acc, vel, time); //calculates new velocity based on acceleration
+    initVelocity_ms() {
+        return this.initVelocity_kmH / 3.6;
+    },
 
-// Pick up an error with how the function below is called and make it robust to such errors
-function calcNewVel(acc, vel, time) {
-    return vel + acc * time * 3.6;
+    acceleration_kmH2() {
+        return (this.acceleration_ms2 * (3600 * 3600)) / 1000;
+    },
+
+    time_hours() {
+        return this.time_sec / 3600;
+    },
+
+    initDistance_m() {
+        return this.initDistance_km * 1000;
+    },
+};
+
+const newDistance = (unit = 'km') => {
+    try {
+        if (unit === 'km') {
+            return spacePar.initDistance_km + spacePar.initVelocity_kmH * spacePar.time_hours();
+        } else if (unit === 'm') {
+            return spacePar.initDistance_m() + spacePar.initVelocity_ms() * spacePar.time_sec;
+        }
+    } catch (err) {
+        console.log('Cannot calculate new distance in kilometers or meters.');
+    }
+};
+
+const remainingFuel = (unit = 'kg') => {
+    try {
+        if (unit === 'kg') {
+            return spacePar.initFuel_kg - spacePar.fuelBurnRate_kgSec * spacePar.time_sec;
+        }
+    } catch (err) {
+        console.log('Cannot calculate remaining fuel in kilograms.');
+    }
+};
+
+const newVelocity = (unit = 'kmH') => {
+    try {
+        if (unit === 'kmH' || unit === 'km/h') {
+            return calcNewVel(spacePar.initVelocity_kmH, spacePar.acceleration_kmH2(), spacePar.time_hours());
+        } else if (unit === 'ms' || unit === 'm/s') {
+            return calcNewVel(spacePar.initVelocity_ms(), spacePar.acceleration_ms2, spacePar.time_sec);
+        }
+    } catch (err) {
+        console.log('Cannot calculate new velocity in km/h or m/s.');
+    }
+};
+
+function calcNewVel(velocityInit, acceleration, time) {
+    return velocityInit + acceleration * time;
 }
 
-console.log(`Corrected New Velocity: ${vel2} km/h`);
-console.log(`Corrected New Distance: ${d2} km`);
-console.log(`Corrected Remaining Fuel: ${rf} kg`);
+//Specify unit in function calls
+console.log(`Corrected New Velocity: ${newVelocity('kmH')} km/h`);
+console.log(`Corrected New Distance: ${newDistance('km')} km`);
+console.log(`Corrected Remaining Fuel: ${remainingFuel('kg')} kg`);
