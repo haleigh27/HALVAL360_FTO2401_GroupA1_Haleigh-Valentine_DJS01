@@ -56,7 +56,7 @@ const newDistance = (unit = 'km') => {
             throw new Error('Invalid unit specified.');
         }
     } catch (err) {
-        console.log('Cannot calculate new distance:', err.message);
+        console.error('Cannot calculate new distance:', err.message);
     }
 };
 
@@ -69,7 +69,7 @@ const remainingFuel = (unit = 'kg') => {
             throw new Error('Invalid unit specified.');
         }
     } catch (err) {
-        console.log('Cannot calculate new distance:', err.message);
+        console.error('Cannot calculate remaining fuel:', err.message);
     }
 };
 
@@ -84,7 +84,7 @@ const newVelocity = (unit = 'kmH') => {
             throw new Error('Invalid unit specified.');
         }
     } catch (err) {
-        console.log('Cannot calculate new distance:', err.message);
+        console.error('Cannot calculate new velocity:', err.message);
     }
 };
 
